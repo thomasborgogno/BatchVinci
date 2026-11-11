@@ -1,0 +1,42 @@
+<Page
+    x:Class="BatchVinci.HomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer>
+        <StackPanel MaxWidth="820" Margin="24,0,24,24" Spacing="28" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel Spacing="10" HorizontalAlignment="Center">
+                <Image Source="ms-appx:///Assets/AppIcon.png" Width="96" Height="96" />
+                <TextBlock Text="BatchVinci" Style="{StaticResource TitleLargeTextBlockStyle}" HorizontalAlignment="Center" />
+                <TextBlock Text="Cambia le label dei tuoi progetti DaVinci Resolve ed esporta un nuovo DRP"
+                           Opacity="0.7" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" />
+            </StackPanel>
+
+            <Grid ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Button Click="Import_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="20" MinHeight="170">
+                    <StackPanel Spacing="8">
+                        <FontIcon Glyph="&#xE8E5;" FontSize="30" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <TextBlock Text="Importa progetto" Style="{StaticResource SubtitleTextBlockStyle}" />
+                        <TextBlock Text="Aggiungi un nuovo DRP, scegli i testi da parametrizzare e salva la configurazione."
+                                   TextWrapping="Wrap" Opacity="0.7" />
+                    </StackPanel>
+                </Button>
+
+                <Button Grid.Column="1" Click="Existing_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="20" MinHeight="170">
+                    <StackPanel Spacing="8">
+                        <FontIcon Glyph="&#xE713;" FontSize="30" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <TextBlock Text="Configura progetto esistente" Style="{StaticResource SubtitleTextBlockStyle}" />
+                        <TextBlock Text="Apri una configurazione salvata, modifica le label ed esporta il nuovo DRP."
+                                   TextWrapping="Wrap" Opacity="0.7" />
+                        <TextBlock x:Name="CountText" FontSize="12" Opacity="0.7" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

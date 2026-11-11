@@ -1,0 +1,59 @@
+<Page
+    x:Class="BatchVinci.ConfigsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BatchVinci">
+
+    <Grid Padding="24,8,24,20" RowSpacing="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Configurazioni salvate" Style="{StaticResource TitleTextBlockStyle}" />
+
+        <ListView x:Name="List" Grid.Row="1" SelectionMode="None" IsItemClickEnabled="True"
+                  ItemsSource="{x:Bind Configs}" ItemClick="List_ItemClick">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem" BasedOn="{StaticResource DefaultListViewItemStyle}">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="Margin" Value="0,0,0,8" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="local:ConfigItem">
+                    <Grid Padding="8,10" ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="{x:Bind Config.Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{x:Bind Subtitle}" Opacity="0.7" FontSize="12" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{x:Bind Config.DrpPath}" Opacity="0.55" FontSize="12" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="File DRP non trovato" Visibility="{x:Bind MissingVisibility}"
+                                       Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontSize="12" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <Button Click="Edit_Click" ToolTipService.ToolTip="Aggiungi o togli label">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <FontIcon Glyph="&#xE70F;" FontSize="14" />
+                                    <TextBlock Text="Modifica label" />
+                                </StackPanel>
+                            </Button>
+                            <Button Click="Delete_Click" ToolTipService.ToolTip="Elimina configurazione">
+                                <FontIcon Glyph="&#xE74D;" FontSize="14" />
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <TextBlock x:Name="EmptyText" Grid.Row="1" Visibility="Collapsed" Opacity="0.7" TextWrapping="Wrap"
+                   Text="Nessuna configurazione salvata. Torna indietro e scegli «Importa progetto»." />
+
+        <InfoBar x:Name="Status" Grid.Row="2" IsOpen="False" IsClosable="True" />
+    </Grid>
+</Page>

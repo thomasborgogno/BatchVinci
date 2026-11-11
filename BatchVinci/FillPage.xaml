@@ -1,0 +1,64 @@
+<Page
+    x:Class="BatchVinci.FillPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BatchVinci">
+
+    <Grid Padding="24,8,24,20" RowSpacing="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <TextBlock x:Name="TitleText" Style="{StaticResource TitleTextBlockStyle}" TextTrimming="CharacterEllipsis" />
+                <TextBlock x:Name="DrpText" Opacity="0.65" FontSize="12" TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                <Button x:Name="RelocateButton" Visibility="Collapsed" Click="Relocate_Click" Content="Cerca DRP…" />
+                <Button x:Name="EditButton" Click="EditLabels_Click" Content="Modifica label" />
+                <Button x:Name="ExportButton" Click="Export_Click" IsEnabled="False"
+                        Style="{StaticResource AccentButtonStyle}" Content="Esporta nuovo DRP…" />
+            </StackPanel>
+        </Grid>
+
+        <ScrollViewer Grid.Row="1">
+            <ItemsControl ItemsSource="{x:Bind Parameters}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="local:TextItem">
+                        <Border Margin="0,0,0,10" Padding="14" CornerRadius="6"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                            <StackPanel Spacing="8">
+                                <Grid ColumnSpacing="8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <TextBox Text="{x:Bind Name, Mode=TwoWay}" FontWeight="SemiBold"
+                                                 PlaceholderText="Nome parametro" AutomationProperties.Name="Nome parametro" />
+                                        <TextBlock Text="{x:Bind Where}" Opacity="0.6" FontSize="12" TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                    <Button Grid.Column="1" Click="ResetItem_Click" Content="Ripristina originale" />
+                                </Grid>
+                                <TextBox Text="{x:Bind EditorText, Mode=TwoWay}" AcceptsReturn="True"
+                                         TextWrapping="Wrap" MinHeight="72" />
+                                <TextBlock Text="{x:Bind ModifiedBadge, Mode=OneWay}"
+                                           Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" FontSize="12" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <InfoBar x:Name="Status" Grid.Row="2" IsOpen="False" IsClosable="True" />
+    </Grid>
+</Page>

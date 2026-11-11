@@ -1,0 +1,67 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        arch: [x64, arm64]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Versione dal tag
+        id: ver
+        shell: pwsh
+        run: |
+          $v = "${{ github.ref_name }}".TrimStart('v')
+          if ($v -notmatch '^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$') { throw "Tag non valido: ${{ github.ref_name }}" }
+          "version=$v" >> $env:GITHUB_OUTPUT
+
+      - name: Publish
+        shell: pwsh
+        run: >
+          dotnet publish BatchVinci/BatchVinci.csproj -c Release
+          -r win-${{ matrix.arch }} -p:Platform=${{ matrix.arch }}
+          -p:Version=${{ steps.ver.outputs.version }}
+          -o publish/${{ matrix.arch }}
+
+      - name: Zip
+        shell: pwsh
+        run: |
+          Copy-Item LICENSE publish/${{ matrix.arch }}/
+          Compress-Archive -Path "publish/${{ matrix.arch }}/*" -DestinationPath "BatchVinci-${{ steps.ver.outputs.version }}-win-${{ matrix.arch }}.zip"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BatchVinci-win-${{ matrix.arch }}
+          path: BatchVinci-*.zip
+
+  publish:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: BatchVinci-win-*
+          merge-multiple: true
+
+      - name: GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >
+          gh release create "${{ github.ref_name }}" BatchVinci-*.zip
+          --repo "${{ github.repository }}"
+          --title "${{ github.ref_name }}" --generate-notes
+          ${{ contains(github.ref_name, '-') && '--prerelease' || '' }}
